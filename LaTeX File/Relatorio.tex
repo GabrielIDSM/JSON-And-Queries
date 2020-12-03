@@ -1,7 +1,7 @@
 \documentclass[a4paper, 12pt] {article}
 
 \title{Relatório}
-\author{Gabriel Inácio\\gabriel.inacio@telcomanager.com}
+\author{Gabriel Inácio\\gabriel.inacio@telcomanager.com\\github.com/GabrielIDSM/JSON-And-Queries}
 \date{12/2020}
 
 \usepackage[top=2cm, bottom=2cm, right=2.5cm, left=2.5cm]{geometry}
@@ -100,7 +100,7 @@ Input	{"notfoo": true, "alsonotfoo": false}
 Output 	null
 \end{lstlisting}
 
-				\newpage \textbf{Identificador de Objeto-Índice Opcional}
+				\textbf{Identificador de Objeto-Índice Opcional}
 
 \begin{lstlisting}[language=bash]
 $ jq '.foo?'
@@ -125,7 +125,7 @@ Input	[{"name":"JSON", "good":true}, {"name":"XML", "good":false}]
 Output 	null
 \end{lstlisting}
 
-				\textbf{Slice}
+				\newpage \textbf{Slice}
 
 \begin{lstlisting}[language=bash]
 $ jq '.[2:4]'
@@ -165,8 +165,8 @@ Output 	"JSON"
 	"XML"
 \end{lstlisting}
 
-				\noindent A documentação completa da ferramenta pode ser acessada em \textit{https://stedolan.github.io/jq/manual}.
-			\newpage \subsubsection{Exemplo}
+				A documentação está disponível em \textit{https://stedolan.github.io/jq/manual}.
+			\subsubsection{Consulta Simples}
 				Considerando o mesmo arquivo “Request.json", podemos obter, por exemplo, o atributo “params" de cada um dos objetos presentes no array “report":
 \begin{lstlisting}[language=bash]
 $ jq '.reports|.[]|.params' Request.json
@@ -182,10 +182,285 @@ $ jq '.reports|.[]|.params' Request.json
 \end{lstlisting}
 
 				O filtro “.[]" tem a função de percorrer todos os elementos do array “reports".
-		\subsection{jRead - An in-place JSON Element Reader}
+			\newpage \subsubsection{Where}
+				O jq possui uma cláusula equivalente ao Where do SQL, a cláusula \textbf{select(bool)}. Como exemplo, podemos obter o objeto no array “reports" que possui o atributo “path" igual a “cli.js":
+\begin{lstlisting}[language=bash]
+$ jq '.reports|.[]|select(.path=="cli.js")' Request.json
+\end{lstlisting}
+
+				O resultado desse comando será:
+
+\begin{lstlisting}[language=json,firstnumber=1]
+{
+  "aggregate": {
+    "sloc": {
+      "logical": 5,
+      "physical": 7
+   },
+  [...],
+  "path": "cli.js"
+}
+\end{lstlisting}
+			\subsubsection{Group By}
+				É possível também utilizar a cláusula \textbf{Group By} nas consultas. Por exemplo, podemos organizar os objetos presentes no array “reports" em função do atributo  “loc":
+\begin{lstlisting}[language=bash]
+$ jq '.reports|group_by(.loc)' Request.json
+\end{lstlisting}
+
+				O resultado desse comando será:
+
+\begin{lstlisting}[language=json,firstnumber=1]
+{
+[
+  [
+    {
+      [...]
+      "loc": 3.5,
+      [...]
+    }
+  ],
+  [
+    {
+      [...]
+      "loc": 5,
+      [...]
+    }
+  ]
+]
+}
+\end{lstlisting}
+			\newpage \subsubsection{Join}
+				Existe também suporte para operações de \textbf{Join}. O jq possui operadores \textit{SQL-Style}, que são o  \textbf{IN},  \textbf{INDEX} e  \textbf{JOIN}.
+
+				Parecido com tabelas SQL, o Join do jq possui a capacidade de criar um novo JSON a partir de outros 2 arquivos. Porém, o jq possui \textbf{suas próprias operações} para isso. Como exemplo, podemos utilizar dois arquivos JSON:
+\begin{lstlisting}[language=json,firstnumber=1]
+{
+  [
+    { "name": "User1", "registration": "2020-04-18" },
+    { "name": "User2", "registration": "2020-11-17" }
+  ]
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language=json,firstnumber=1]
+{
+  [
+    { "name": "User1", "editcount": 164 },
+    { "name": "User2", "editcount": 150 },
+    { "name": "User3", "editcount": 10 }
+  ]
+}
+\end{lstlisting}
+
+				Para obtermos um único arquivo, podemos utilizar o seguinte comando:
+
+\begin{lstlisting}[language=bash]
+$ jq -s '[.[0]+.[1]|group_by(.name)[]|select(length>1)|add]' 
+1.json 2.json
+\end{lstlisting}
+
+				O resultado será:
+
+\begin{lstlisting}[language=json,firstnumber=1]
+{
+  [
+    {
+      "name": "User1",
+      "registration": "2020-04-18",
+      "editcount": 164
+    },
+    {
+      "name": "User2",
+      "registration": "2020-11-17",
+      "editcount": 150
+    }
+  ]
+}
+\end{lstlisting}
+
+				A cláusula Join não foi utilizada, porém foi obtido o resultado esperado.
+			\subsubsection{Funções de Agregação}
+				Por padrão, o jq não possui funções de agregação, diferente de bancos de dados SQL. Porém, o jq possui \textbf{suporte a funções e procedimentos}, de forma que funções de agregação (como SUM e COUNT de SQL) possam ser definidas para realizar consultas.
+
+				Por exemplo, vamos considerar o seguinte JSON:
+\begin{lstlisting}[language=json,firstnumber=1]
+{
+  {
+    "owner_id": 1,
+    "owner": "Adams", 
+    "age": 25, 
+    "pet_id": 10, 
+    "pet": "Bella", 
+    "litter": 4 
+  },
+  { "owner_id": 1, 
+    "owner": "Adams", 
+    "age": 25, 
+    "pet_id": 20, 
+    "pet": "Lucy",  
+    "litter": 2 
+  }
+}
+\end{lstlisting}
+
+				Podemos obter o número de animais por dono, para isso é possível usar o código:
+\begin{lstlisting}[language=bash]
+$ jq -sc 'def count($k): group_by(.[$k])[]|length as $l|.[0]|
+.pets_count=$l|del(.pet_id,.pet,.litter);
+count("owner_id")' 1.json
+\end{lstlisting}
+
+				O resultado será:
+\begin{lstlisting}[language=json,firstnumber=1]
+{
+  {
+    "owner_id": 1,
+    "owner": "Adams",
+    "age": 25,
+    "pets_count": 2
+  }
+}
+\end{lstlisting}
+	\newpage \section{JavaScript}
+		\subsection{fx - Command-line tool and terminal JSON viewer}
 			\subsubsection{Introdução}
+				O fx foi desenvolvido para ser semelhante ao jq, porém com algumas interessantes diferenças. O fx possui suporte para a linguagem \textbf{JSONata}, que é uma linguagem de query para arquivos JSON, além disso é possível usar \textbf{JavaScript} para realizar consultas.
+
+				O fx possui dois modos de uso: \textbf{CLI} e \textbf{Interativo}. O modo interativo funciona como o \textbf{VIM}, enquanto o modo CLI é usado como o jq.
 			\subsubsection{Sintaxe}
-			\subsubsection{Exemplo}
+				Considerando o uso da ferramenta, o modo mais relevante é o \textbf{CLI com JSONata}. Dessa forma, basta conhecer a linguagem de query para realizar consultas.
+			\subsubsection{Consulta Simples}
+				Para obter o atributo “maintainability" do primeiro objeto no array “reports", é possível usar:
+\begin{lstlisting}[language=bash]
+$ fx Request.json 'jsonata("reports[0].maintainability)"'
+\end{lstlisting}
+			\subsubsection{Where}
+				Para obtermos o objeto “reports" que tem o atributo “params" equivalente a “0", podemos utilizar:
+\begin{lstlisting}[language=bash]
+$ fx Request.json 'jsonata("reports[params=0]")'
+\end{lstlisting}
+				
+				O reseultado será:
+\begin{lstlisting}[language=json,firstnumber=1]
+{
+  "aggregate": {
+    "sloc": {
+      "logical": 5,
+      "physical": 7
+    },
+  [...],
+  "params": 0,
+  "path": "cli.js"
+}
+\end{lstlisting}
+			\subsubsection{Group By}
+				Para obtermos todos os atributos “path" do array “dependencies" do primeiro objeto do array “reports" organizados em um array chamado “Caminho", podemos fazer:
+\begin{lstlisting}[language=bash]
+$ fx Request.json 'jsonata("reports[0].dependencies{'Caminho' : path}")'
+\end{lstlisting}
+
+				O resultado será:
+\begin{lstlisting}[language=json,firstnumber=1]
+{
+  "Caminho": [
+    "./estimator",
+    "./cumulative_flow_diagram.json",
+    "./throughput.json"
+  ]
+}
+\end{lstlisting}
+			\subsubsection{Join}
+				Por trabalhar com um único arquivo JSON, o JSONata não possui suporte para a cláusula Join do SQL (Apesar de ser possível simular).
+			\subsubsection{Funções de Agregação}
+				JSONata possui suporte nativo para funções de agregação, assim é muito simples utilizar. Por exemplo, podemos obter a soma do atributo “params" de todos os objetos do array “reports":
+\begin{lstlisting}[language=bash]
+$ fx Request.json 'jsonata("{"values" : $sum(reports.params)}")'
+\end{lstlisting}
+
+				O resultado será:
+\begin{lstlisting}[language=json,firstnumber=1]
+{
+  "values": 1.5
+}
+\end{lstlisting}
+
+				Para que o resultado fosse um objeto JSON, foi necessário usar um \textbf{Group By}.
+		\newpage \subsection{emuto - JSON Processor}
+			\subsubsection{Introdução}
+				O emuto é semelhante ao jx em questão de funcionamento e sintaxe. Pode ser instalado pelo npm usando:
+\begin{lstlisting}[language=bash]
+$ npm install -g emuto emuto-cli
+\end{lstlisting}
+
+				É um projeto de código aberto e possui uma documentação muito bem escrita. É um projeto relativamente menor que o jx, porém igualmente confiável.
+
+				Possui um simulador online presente em \textit{\textbf{https://kantord.github.io/emuto/docs/\\try\_emuto}}.
+			\subsubsection{Sintaxe}
+				O emuto pode ser utilizado da seguinte forma:
+\begin{lstlisting}[language=bash]
+$ cat file.json | emuto 'query'
+\end{lstlisting}
+
+				Sua linguagem de query é baseada em \textbf{GraphQL}, assim são consideravelmente semelhantes. 
+
+				O emuto não foi projetado para ser uma linguagem exclusivamente de query, e sim uma linguagem de manipulação e processamento de arquivos JSON, em função disso sua sintaxe não é idêntica a GraphQL.
+			\subsubsection{Scripts}
+				Um diferencial do emuto para outras ferramentas é a possibilidade de criar um script para realizar a consulta em um JSON. Dessa forma, basta criar um arquivo com extensão \textit{.emu} e usar da seguinte forma:
+\begin{lstlisting}[language=bash]
+$ cat file.json | ./file.emu
+\end{lstlisting}
+
+				Como exemplo de um script \textit{.emu} temos:
+\begin{lstlisting}
+#! emuto -s
+
+$
+  | map ($ => $ { commit { message } committer { login } } )
+  | map ($ => {
+      "committer": $.committer.login,
+      "message":   $.commit.message,
+    })
+\end{lstlisting}
+			\subsubsection{Linguagem de Query}
+				Sua linguagem de query tem o objetivo de criar uma nova estrutura a partir de um JSON existente. Dessa forma, pode-se dizer que o usuário cria a estrutura final do JSON enquanto o emuto preenche os campos.
+			\subsubsection{Consulta Simples}
+				Para obter o atributo “loc", basta realizar a seguinte query:
+\begin{lstlisting}[language=bash]
+$ cat Request.json | emuto '$.loc'
+\end{lstlisting}
+			\subsubsection{Funções de Agregação}
+				Para obtermos, por exemplo, o número de objetos no array “reports", basta executarmos a query:
+\begin{lstlisting}[language=bash]
+$ cat Request.json | emuto '$ { ...Stats }
+
+where
+  $Stats=($=>{
+      "Reports Length":($.reports|length)
+    })'
+\end{lstlisting}
+
+				O resultado será:
+\begin{lstlisting}[language=json,firstnumber=1]
+{
+  "Reports Length": 2
+}
+\end{lstlisting}
+	\newpage \section{Python}
+		\subsection{jello - Filter JSON and JSON Lines data}
+			\subsubsection{Introdução}
+				O jello foi desenvolvido para ser, resumidamente, \textit{"um jq que utiliza uma query em python"}. Dessa forma, ele possui as mesmas funcionalidades do jq, porém utiliza a sintaxe de Python para realizar consultas.
+
+				Essa ferramenta é relativamente recente, a mais nova de todas as ferramentas citadas. Em função disso, não possui muitos contribuidores. Ela é desenvolvida por \textbf{Kelly Brazil} e é disponibilizada sob a licença do MIT.
+
+				Seu código pode ser encontrado no GitHub na página \textit{\textbf{https://github.com/\\kellyjonbrazil/jello}}.
+\iffalse
+			\subsubsection{Sintaxe}
+			\subsubsection{Consulta Simples}
+			\subsubsection{Where}
+			\subsubsection{Group By}
+			\subsubsection{Join}
+			\subsubsection{Funções de Agregação}
+\fi
 \end{document}
 
 
