@@ -1,0 +1,373 @@
+{
+    "reports": [
+        {
+            "aggregate": {
+                "sloc": {
+                    "logical": 5,
+                    "physical": 7
+                },
+                "cyclomatic": 1,
+                "halstead": {
+                    "operators": {
+                        "distinct": 4,
+                        "total": 15,
+                        "identifiers": [
+                            "const",
+                            "=",
+                            "()",
+                            "."
+                        ]
+                    },
+                    "operands": {
+                        "distinct": 10,
+                        "total": 16,
+                        "identifiers": [
+                            "estimator",
+                            "\"./estimator\"",
+                            "require",
+                            "evolution",
+                            "\"./cumulative_flow_diagram.json\"",
+                            "throughput",
+                            "\"./throughput.json\"",
+                            "estimate",
+                            "console",
+                            "log"
+                        ]
+                    },
+                    "length": 31,
+                    "vocabulary": 14,
+                    "difficulty": 3.2,
+                    "volume": 118.02800258378572,
+                    "effort": 377.68960826811434,
+                    "bugs": 0.039342667527928574,
+                    "time": 20.98275601489524
+                },
+                "params": 0,
+                "line": 2,
+                "cyclomaticDensity": 20
+            },
+            "functions": [],
+            "dependencies": [
+                {
+                    "line": 2,
+                    "path": "./estimator",
+                    "type": "CommonJS"
+                },
+                {
+                    "line": 3,
+                    "path": "./cumulative_flow_diagram.json",
+                    "type": "CommonJS"
+                },
+                {
+                    "line": 4,
+                    "path": "./throughput.json",
+                    "type": "CommonJS"
+                }
+            ],
+            "maintainability": 124.63257712933509,
+            "loc": 5,
+            "cyclomatic": 1,
+            "effort": 377.68960826811434,
+            "params": 0,
+            "path": "cli.js"
+        },
+        {
+            "aggregate": {
+                "sloc": {
+                    "logical": 20,
+                    "physical": 62
+                },
+                "cyclomatic": 1,
+                "halstead": {
+                    "operators": {
+                        "distinct": 12,
+                        "total": 58,
+                        "identifiers": [
+                            "=",
+                            ".",
+                            "{}",
+                            ":",
+                            "function",
+                            "const",
+                            "()",
+                            "-",
+                            "/",
+                            "return",
+                            "let",
+                            "+"
+                        ]
+                    },
+                    "operands": {
+                        "distinct": 29,
+                        "total": 66,
+                        "identifiers": [
+                            "module",
+                            "exports",
+                            "<anonymous>",
+                            "estimate",
+                            "throughput",
+                            "evolution",
+                            "meanDelivery",
+                            "weeks",
+                            "calculeMeanDelivery",
+                            "meanGrowth",
+                            "calculeMeanToDoGrowth",
+                            "currentState",
+                            "length",
+                            1,
+                            "estimateInWeeks",
+                            "todo",
+                            "Math",
+                            "ceil",
+                            "reliabilityPercentage",
+                            "NaN",
+                            "total",
+                            "sum",
+                            0,
+                            "map",
+                            "reduce",
+                            "lastWeek",
+                            null,
+                            "x",
+                            "y"
+                        ]
+                    },
+                    "length": 124,
+                    "vocabulary": 41,
+                    "difficulty": 13.655172413793103,
+                    "volume": 664.3364485726424,
+                    "effort": 9071.628746026428,
+                    "bugs": 0.22144548285754748,
+                    "time": 503.97937477924603
+                },
+                "params": 6,
+                "line": 1,
+                "cyclomaticDensity": 5
+            },
+            "functions": [
+                {
+                    "name": "estimate",
+                    "sloc": {
+                        "logical": 8,
+                        "physical": 14
+                    },
+                    "cyclomatic": 1,
+                    "halstead": {
+                        "operators": {
+                            "distinct": 9,
+                            "total": 28,
+                            "identifiers": [
+                                "const",
+                                "=",
+                                "()",
+                                ".",
+                                "-",
+                                "/",
+                                "return",
+                                "{}",
+                                ":"
+                            ]
+                        },
+                        "operands": {
+                            "distinct": 17,
+                            "total": 31,
+                            "identifiers": [
+                                "throughput",
+                                "evolution",
+                                "meanDelivery",
+                                "weeks",
+                                "calculeMeanDelivery",
+                                "meanGrowth",
+                                "calculeMeanToDoGrowth",
+                                "currentState",
+                                "length",
+                                1,
+                                "estimateInWeeks",
+                                "todo",
+                                "Math",
+                                "ceil",
+                                "reliabilityPercentage",
+                                "NaN",
+                                "<anonymous>"
+                            ]
+                        },
+                        "length": 59,
+                        "vocabulary": 26,
+                        "difficulty": 8.205882352941176,
+                        "volume": 277.32594337032447,
+                        "effort": 2275.7040647153094,
+                        "bugs": 0.09244198112344149,
+                        "time": 126.42800359529497
+                    },
+                    "params": 2,
+                    "line": 5,
+                    "cyclomaticDensity": 12.5
+                },
+                {
+                    "name": "calculeMeanDelivery",
+                    "sloc": {
+                        "logical": 2,
+                        "physical": 4
+                    },
+                    "cyclomatic": 1,
+                    "halstead": {
+                        "operators": {
+                            "distinct": 6,
+                            "total": 9,
+                            "identifiers": [
+                                "const",
+                                "=",
+                                "()",
+                                ".",
+                                "return",
+                                "/"
+                            ]
+                        },
+                        "operands": {
+                            "distinct": 7,
+                            "total": 10,
+                            "identifiers": [
+                                "weeks",
+                                "total",
+                                "sum",
+                                0,
+                                "map",
+                                "reduce",
+                                "length"
+                            ]
+                        },
+                        "length": 19,
+                        "vocabulary": 13,
+                        "difficulty": 4.285714285714286,
+                        "volume": 70.30835464468075,
+                        "effort": 301.3215199057746,
+                        "bugs": 0.02343611821489358,
+                        "time": 16.7400844392097
+                    },
+                    "params": 1,
+                    "line": 26,
+                    "cyclomaticDensity": 50
+                },
+                {
+                    "name": "calculeMeanToDoGrowth",
+                    "sloc": {
+                        "logical": 3,
+                        "physical": 13
+                    },
+                    "cyclomatic": 1,
+                    "halstead": {
+                        "operators": {
+                            "distinct": 7,
+                            "total": 11,
+                            "identifiers": [
+                                "let",
+                                "=",
+                                "const",
+                                "()",
+                                ".",
+                                "return",
+                                "/"
+                            ]
+                        },
+                        "operands": {
+                            "distinct": 9,
+                            "total": 12,
+                            "identifiers": [
+                                "weeks",
+                                "lastWeek",
+                                null,
+                                "total",
+                                "sum",
+                                0,
+                                "map",
+                                "reduce",
+                                "length"
+                            ]
+                        },
+                        "length": 23,
+                        "vocabulary": 16,
+                        "difficulty": 4.666666666666666,
+                        "volume": 92,
+                        "effort": 429.33333333333326,
+                        "bugs": 0.030666666666666665,
+                        "time": 23.851851851851848
+                    },
+                    "params": 1,
+                    "line": 39,
+                    "cyclomaticDensity": 33.33333333333333
+                },
+                {
+                    "name": "sum",
+                    "sloc": {
+                        "logical": 1,
+                        "physical": 3
+                    },
+                    "cyclomatic": 1,
+                    "halstead": {
+                        "operators": {
+                            "distinct": 2,
+                            "total": 2,
+                            "identifiers": [
+                                "return",
+                                "+"
+                            ]
+                        },
+                        "operands": {
+                            "distinct": 2,
+                            "total": 4,
+                            "identifiers": [
+                                "x",
+                                "y"
+                            ]
+                        },
+                        "length": 6,
+                        "vocabulary": 4,
+                        "difficulty": 2,
+                        "volume": 12,
+                        "effort": 24,
+                        "bugs": 0.004,
+                        "time": 1.3333333333333333
+                    },
+                    "params": 2,
+                    "line": 60,
+                    "cyclomaticDensity": 100
+                }
+            ],
+            "dependencies": [],
+            "maintainability": 128.03015432120054,
+            "loc": 3.5,
+            "cyclomatic": 1,
+            "effort": 757.5897294886042,
+            "params": 1.5,
+            "path": "estimator.js"
+        }
+    ],
+    "adjacencyMatrix": [
+        [
+            0,
+            0
+        ],
+        [
+            0,
+            0
+        ]
+    ],
+    "firstOrderDensity": 0,
+    "visibilityMatrix": [
+        [
+            0,
+            0
+        ],
+        [
+            0,
+            0
+        ]
+    ],
+    "changeCost": 50,
+    "coreSize": 0,
+    "loc": 4.25,
+    "cyclomatic": 1,
+    "effort": 567.6396688783593,
+    "params": 0.75,
+    "maintainability": 126.33136572526782
+}
