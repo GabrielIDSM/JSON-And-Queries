@@ -448,19 +448,69 @@ where
 	\newpage \section{Python}
 		\subsection{jello - Filter JSON and JSON Lines data}
 			\subsubsection{Introdução}
-				O jello foi desenvolvido para ser, resumidamente, \textit{"um jq que utiliza uma query em python"}. Dessa forma, ele possui as mesmas funcionalidades do jq, porém utiliza a sintaxe de Python para realizar consultas.
+				O jello foi desenvolvido para ser, resumidamente, \textit{“um jq que utiliza uma query em python"}. Dessa forma, ele possui as mesmas funcionalidades do jq, porém utiliza a sintaxe de Python para realizar consultas.
 
 				Essa ferramenta é relativamente recente, a mais nova de todas as ferramentas citadas. Em função disso, não possui muitos contribuidores. Ela é desenvolvida por \textbf{Kelly Brazil} e é disponibilizada sob a licença do MIT.
 
 				Seu código pode ser encontrado no GitHub na página \textit{\textbf{https://github.com/\\kellyjonbrazil/jello}}.
-\iffalse
+
+				Sua instalação pode ser feita via terminal:
+\begin{lstlisting}[language=bash]
+$ pip3 install jello
+\end{lstlisting}
+
+				Para usar o \textit{pip} basta ter o Python instalado.
 			\subsubsection{Sintaxe}
-			\subsubsection{Consulta Simples}
-			\subsubsection{Where}
-			\subsubsection{Group By}
-			\subsubsection{Join}
-			\subsubsection{Funções de Agregação}
-\fi
+				Para executar uma query em um arquivo JSON usando o jello, basta seguir o seguinte padrão:
+\begin{lstlisting}[language=bash]
+$ cat file.json | jello 'op' 'query'
+\end{lstlisting}
+
+				Sua query utiliza da sintaxe pura de \textbf{Python 3}, assim basta conhecer a linguagem para conseguir construir uma query.
+
+				Uma \textit{feature} muito útil do jello é a implementação do módulo \textbf{glom}. O glom é um módulo de manipulação de dados para Python, útil para operações em estruturas aninhadas.
+
+				Para poder usar o glom, é necessário adicionar a seguinte linha no arquivo \textit{.jelloconf.py}:
+\begin{lstlisting}
+from glom import *
+\end{lstlisting}
+			\subsubsection{Consulta}
+				Apesar de ser uma ferramenta prática, sua linguagem de query possui muitas limitações. Por ser baseada em Python, consultas complexas exigem grande esforço por parte do programador para desenvolver a query.
+
+				Por exemplo, para listar todos os objetos no array “reports" devemos fazer:
+\begin{lstlisting}[language=bash]
+$ cat Request.json | jello '\
+result=[]
+for data in _["reports"]:
+  result.append(data)
+result'
+\end{lstlisting}
+
+				\newpage O resultado da query será:
+\begin{lstlisting}[language=json,firstnumber=1]
+{
+  [
+    {
+      "aggregate": {
+      "sloc": {
+        "logical": 5,
+        "physical": 7
+      },
+      [...],
+      "path": "cli.js"
+    },
+    {
+      "aggregate": {
+      "sloc": {
+        "logical": 20,
+        "physical": 62
+      },
+      [...],
+      "path": "estimator.js"
+    }
+  ]
+}
+\end{lstlisting}
 \end{document}
 
 
