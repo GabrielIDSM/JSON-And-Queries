@@ -26,19 +26,6 @@ print("\nQUERY: reports[?params>`-1`]\n")
 tableReader.Reader(result, 0)
 print("\nOBS: Caso a resposta seja um JSON, essa será uma Table")
 
-
---GROUP BY
---expression = ""
---result = jmespath.search(expression, data)
-print("\n==========GROUP BY==========\nQUERY: \n")
-
-
---JOIN
-expression = "reports[*].dependencies[*].[line, type]"
-result = jmespath.search(expression, data)
-print("\n==========JOIN==========\nQUERY: reports[*].dependencies[*].line\n")
-tableReader.Reader(result, 0)
-
 --FUNCOES
 expression = "avg(reports[*].params)"
 result = jmespath.search(expression, data)
@@ -60,4 +47,11 @@ print(result)
 expression = "min(reports[*].loc)"
 result = jmespath.search(expression, data)
 print("\nQUERY: min(reports[*].loc)\n")
-print(result .. "\n")
+print(result)
+
+--GROUP BY
+print("\n==========GROUP BY==========\nJMESPath nao possui suporte nativo \n")
+
+
+--JOIN
+print("\n==========JOIN==========\nJMESPath nao possui suporte nativo\n")
