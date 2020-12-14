@@ -1,12 +1,7 @@
 --IMPORT
 local jmespath = require "jmespath"
 local jsonStorage = require("jsonStorage")
-
---TESTE
---local expression = "foo.baz"
---local data = { foo = { baz = "bar" } } --JMESPath utiliza tables
---local result = jmespath.search(expression, data)
---print("TESTE: \n" .. result)
+local tableReader = require("tableReader")
 
 --Request.json
 data = jsonStorage.loadTable("Request.json")
@@ -18,40 +13,51 @@ print("==========CONSULTA SIMPLES==========\nQUERY: reports[1].params\n\n" .. re
 expression = "reports[*].params"
 result = jmespath.search(expression, data)
 print("\nQUERY: reports[*].params\n\n ")
-for index, data in ipairs(result) do
-    print("'"..index.."': " .. data)
-end
+tableReader.Reader(result, 0)
 
 --WHERE
 expression = "reports[?path==`cli.js`]"
 result = jmespath.search(expression, data)
 print("\n==========WHERE==========\nQUERY: reports[?path==`cli.js`]\n")
-for index, data in ipairs(result) do
-    print("'"..index.."':")
-
-    for key, value in pairs(data) do
-        print('', "'"..key.."':", value)
-    end
-end
+tableReader.Reader(result, 0)
+expression = "reports[?params>`-1`]"
+result = jmespath.search(expression, data)
+print("\nQUERY: reports[?params>`-1`]\n")
+tableReader.Reader(result, 0)
 print("\nOBS: Caso a resposta seja um JSON, essa será uma Table")
+
 
 --GROUP BY
 --expression = ""
 --result = jmespath.search(expression, data)
 print("\n==========GROUP BY==========\nQUERY: \n")
 
---JOIN
---expression = ""
---result = jmespath.search(expression, data)
-print("\n==========JOIN==========\nQUERY: \n")
 
---FUNCOES DE AGREGACAO
+--JOIN
+expression = "reports[*].dependencies[*].[line, type]"
+result = jmespath.search(expression, data)
+print("\n==========JOIN==========\nQUERY: reports[*].dependencies[*].line\n")
+tableReader.Reader(result, 0)
+
+--FUNCOES
 expression = "avg(reports[*].params)"
 result = jmespath.search(expression, data)
-print("\n=========FUNCOES DE AGREGACAO=========")
+print("\n=========FUNCOES=========")
 print("QUERY: avg(reports[*].params)\n")
 print(result)
 expression = "sum(reports[*].params)"
 result = jmespath.search(expression, data)
 print("\nQUERY: sum(reports[*].params)\n")
 print(result)
+expression = "length(reports)"
+result = jmespath.search(expression, data)
+print("\nQUERY: length(reports)\n")
+print(result)
+expression = "length(reports[0].path)"
+result = jmespath.search(expression, data)
+print("\nQUERY: length(reports[0].path)\n")
+print(result)
+expression = "min(reports[*].loc)"
+result = jmespath.search(expression, data)
+print("\nQUERY: min(reports[*].loc)\n")
+print(result .. "\n")
