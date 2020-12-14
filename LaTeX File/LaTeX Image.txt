@@ -1,5 +1,0 @@
-\begin{figure}[h]
-	\centering
-	\includegraphics[width=12cm]{Image.jpeg}
-	\label{figure:Image}
-\end{figure}
