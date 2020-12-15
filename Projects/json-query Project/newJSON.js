@@ -4,7 +4,7 @@ const require = createRequire(import.meta.url);
 const fs = require('fs')
 const jsonQuery = require('json-query')
 
-function newJSON(fileName, query, callback) {
+function newJSON(fileName, query, locals, callback) {
     let result
     fs.readFile('./'+fileName+'.json', 'utf8', (err, jsonString) => {
         if (err) {
@@ -12,7 +12,7 @@ function newJSON(fileName, query, callback) {
             return
         }
         var obj = JSON.parse(jsonString)
-        obj = jsonQuery(query, {data: obj}).value
+        obj = jsonQuery(query, {data: obj, locals: locals}).value
         callback(obj)
     })
 }
