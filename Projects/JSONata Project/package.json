@@ -1,0 +1,10 @@
+{
+    "name": "project",
+    "version": "1.0.0",
+    "description": "project with jsonata",
+    "main": "main.js",
+    "scripts": { },
+    "author": "gabriel",
+    "license": "none",
+    "type": "module"
+  }
