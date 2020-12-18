@@ -31,4 +31,19 @@ $res = $jsonq->from('reports.0.dependencies')
     ->groupBy('type')
     ->get();
 echo($res);
+
+//Query 4
+echo "<br/><br/>===   QUERY 4.1 (AGG FUNCTION):  ->from('reports.0.dependencies')->where('type', '=', 'CommonJS')->count()   ===<br/><br/>";
+$jsonq = new Jsonq('Request.json');
+$res = $jsonq->from('reports.0.dependencies')
+    ->where('type', '=', 'CommonJS')
+    ->count();
+echo($res);
+
+echo "<br/><br/>===   QUERY 4.2 (AGG FUNCTION):  ->from('reports.0.dependencies')->where('line', '<', 3)->avg('line');   ===<br/><br/>";
+$jsonq = new Jsonq('Request.json');
+$res = $jsonq->from('reports.0.dependencies')
+    ->where('line', '<', 3)
+    ->avg('line');
+echo($res);
 ?>
