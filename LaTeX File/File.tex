@@ -560,6 +560,42 @@ result'
 				\includegraphics[width=16cm]{jsonq.png}
 				\label{figure:Image}
 			\end{figure}
+
+	\newpage \section{Go}
+		\subsection{dasel - Query, update and convert data structures}
+			\subsubsection{Introdução}
+				Dasel (de \textit{\textbf{da}ta \textbf{sel}ector}) é uma ferramenta de linha de comando desenvolvida em Go. É um dos projetos com maior suporte da comunidade, onde sua versão mais recente foi publicada já em 2021. Apesar de ser semelhante a ferramenta como o \textbf{jq} e o \textbf{yq}, o dasel possui suporte para I/O para os formatos JSON, YAML, TOML, XML e CSV sem precisar de nenhuma dependência.
+			\subsubsection{Consulta Simples}
+				Utilizando como exemplo o arquivos Request.json, podemos obter o atributo \textit{changeCost} da seguinte forma:
+\begin{lstlisting}[language=bash]
+$ dasel -f Request.json '.changeCost'
+\end{lstlisting}
+				Ou ainda dessa outra forma:
+\begin{lstlisting}[language=bash]
+$ dasel select -f Request.json -p json -s '.changeCost'
+\end{lstlisting}
+				Para escolher um item no array \textit{reports} é possível usar:
+\begin{lstlisting}[language=bash]
+$ dasel select -f Request.json -p json -s '.reports.[0]'
+\end{lstlisting}
+				Para todos os itens no array deve-se usar:
+\begin{lstlisting}[language=bash]
+$ dasel select -f Request.json -p json -s '.reports.[*]' -m
+\end{lstlisting}
+			\subsubsection{Where}
+				Para obter o elemento no array que tem o campo \textit{path} igual a \textit{cli.js} temos:
+\begin{lstlisting}[language=bash]
+$ dasel select -f Request.json -p json -s '.reports.(path=cli.js)'
+\end{lstlisting}
+				Para obter todos os elementos do array \textit{dependencies} no objeto de index 0 no array \textit{reports} que possuem o campo \textit{type} igual a \textit{CommonJS} temos:
+\begin{lstlisting}[language=bash]
+$ dasel select -f Request.json -p json -s '.reports.[0]
+.dependencies.(type=CommonJS)' -m
+\end{lstlisting}
+			\subsubsection{Limitações e \textit{Features}}
+				Diferente de algumas ferramentas disponíveis, o dasel não possui suporte para operações como \textit{Join} e \textit{Group By}. Contudo, essa ferramenta possui suporte para inserção, remoção e atualização de campos em arquivos de diversos formatos.
+
+				Dessa forma, é uma ferramenta muito útil para \textbf{auxiliar outras ferramentas de query}, já que é possível modificar o arquivo JSON e converter de/para outros formatos.
 \end{document}
 
 
